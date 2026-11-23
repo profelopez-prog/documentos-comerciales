@@ -526,6 +526,15 @@ table.items input,table.items select{padding:5px 4px;font-size:12px}
 .c-keys{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}
 .c-keys button{border:0;border-radius:10px;padding:12px 0;font-size:18px;font-weight:700;background:#2e3547;color:#fff;cursor:pointer}
 .c-keys .op{background:#ff9f1a;color:#1d2330}.c-keys .eq{background:#1f5eff}.c-keys .fn{background:#515a70}
+.alu{padding:6px 14px;border:1px solid #b4c8f3;border-radius:99px;font:inherit;font-size:14px;width:200px;max-width:100%;background:#fff;color:#1d2330}
+.md-row{display:flex;gap:10px;flex-wrap:wrap}
+.md-btn{flex:1;min-width:140px;padding:12px 16px;border-radius:10px;font:inherit;font-weight:700;border:1px solid #c5d3fb;background:#e8eeff;color:#1646c9;cursor:pointer}
+.md-btn.p{background:#1f5eff;border-color:#1f5eff;color:#fff}
+.md-btn.d{background:#fff;color:#b42318;border-color:#f1b5ae}
+#cf{position:fixed;left:0;right:0;bottom:0;z-index:70;background:#fff4d6;border-top:2px solid #e0b100;padding:10px 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:14px}
+#cf span{flex:1 1 260px}#cf .md-btn{flex:0 0 auto;min-width:0;padding:9px 14px}
+.ay-ol{list-style:disc}ol.ay-ol{list-style:decimal}
+@media print{#rc,#fin,#cf{display:none!important}}
 @media print{.aviso{display:none}}
 #printArea{display:none}
 @media print{
@@ -536,6 +545,15 @@ table.items input,table.items select{padding:5px 4px;font-size:12px}
  #printArea canvas{width:210mm;height:297mm;display:block;page-break-after:always}
  #printArea canvas:last-child{page-break-after:auto}
 }
+header{background:#1d2a44;padding:12px 20px 16px}
+header h1{color:#fff}
+header .alu{border-color:#fff}
+header #finB{background:#22a06b;border:1px solid #22a06b;color:#fff;box-shadow:none}
+header #ayB{background:#ff9f1c;border:1px solid #ff9f1c;color:#1d2a44;box-shadow:none;display:inline-flex;align-items:center}
+header #ayB .q{display:inline-flex;width:18px;height:18px;border:1.5px solid #1d2a44;border-radius:99px;align-items:center;justify-content:center;font-size:12px;font-weight:800;margin-right:6px}
+nav{padding-top:14px}
+.fin-ok{margin:12px 0 0;color:#12805c;font-weight:700}
+@media (max-width:700px){header{gap:8px;padding:8px 14px 14px}header h1{flex:1 0 100%;margin:0;font-size:16px;white-space:nowrap}header .badge{order:1}#ayB{order:2}#alu{order:3;flex:1 1 140px;width:auto;min-width:0}#finB{order:4}}
 </style>
 </head>
 <body>
@@ -543,7 +561,9 @@ table.items input,table.items select{padding:5px 4px;font-size:12px}
 <header>
   <h1>Documentos comerciales escolares</h1>
   <span class="badge">Uso didáctico · sin validez fiscal ni legal</span>
-  <button class="ay-btn" id="ayB">? Ayuda</button>
+  <input id="alu" class="alu" placeholder="Estudiante: tu nombre" maxlength="40" autocomplete="off" aria-label="Nombre del estudiante">
+  <button class="ay-btn" id="finB">Guardar</button>
+  <button class="ay-btn" id="ayB"><span class="q" aria-hidden="true">?</span>Ayuda</button>
 </header>
 <nav id="tabs">
   <button data-d="factura" class="on">Factura</button>
@@ -640,7 +660,7 @@ table.items input,table.items select{padding:5px 4px;font-size:12px}
     <h2>Pago recibido</h2>
     <label>Concepto</label><input id="rcConc" value="Pago de factura">
     <div class="row">
-      <div><label>Importe ($)</label><input id="rcImp" type="number" min="0" step="any" value="22566.5"></div>
+      <div><label>Importe ($)</label><input id="rcImp" type="text" inputmode="decimal" data-m="1" autocomplete="off" value="22566.5"></div>
       <div><label>Forma de pago</label><select id="rcForma"><option>Efectivo</option><option>Transferencia bancaria</option><option>Cheque</option><option>Tarjeta de débito</option><option>Tarjeta de crédito</option></select></div>
     </div>
     <label>Detalle del medio de pago (opcional)</label><input id="rcDet" placeholder="Ej: cheque N° 1234 del Banco Escolar">
@@ -649,7 +669,7 @@ table.items input,table.items select{padding:5px 4px;font-size:12px}
   <div class="card" data-docs="pagare">
     <h2>Datos del pagaré</h2>
     <div class="row">
-      <div><label>Importe ($)</label><input id="pgImp" type="number" min="0" step="any" value="50000"></div>
+      <div><label>Importe ($)</label><input id="pgImp" type="text" inputmode="decimal" data-m="1" autocomplete="off" value="50000"></div>
       <div><label>Vencimiento</label><input id="pgVto" type="date"></div>
     </div>
     <label>Lugar de emisión</label><input id="pgLE" value="Buenos Aires">
@@ -665,7 +685,7 @@ table.items input,table.items select{padding:5px 4px;font-size:12px}
     <h2>Datos del cheque</h2>
     <div class="row">
       <div><label>Tipo</label><select id="chTipo"><option value="com">Cheque común</option><option value="dif">Cheque de pago diferido</option></select></div>
-      <div><label>Importe ($)</label><input id="chImp" type="number" min="0" step="any" value="35000"></div>
+      <div><label>Importe ($)</label><input id="chImp" type="text" inputmode="decimal" data-m="1" autocomplete="off" value="35000"></div>
     </div>
     <div class="row">
       <div><label>Lugar de emisión</label><input id="chLug" value="Buenos Aires"></div>
@@ -721,7 +741,7 @@ table.items input,table.items select{padding:5px 4px;font-size:12px}
     </div>
     <div class="row">
       <div id="slQW"><label>Quincena</label><select id="slQ"><option>1ª quincena</option><option>2ª quincena</option></select></div>
-      <div><label id="slBasL">Sueldo básico mensual ($)</label><input id="slBas" type="number" min="0" step="any" value="500000"></div>
+      <div><label id="slBasL">Sueldo básico mensual ($)</label><input id="slBas" type="text" inputmode="decimal" data-m="1" autocomplete="off" value="500000"></div>
     </div>
     <div class="row" id="slDiasW"><div><label>Días trabajados</label><input id="slDias" type="number" min="0" step="any" value="20"></div><div></div></div>
     <div class="row" data-mod="men vac">
@@ -733,11 +753,11 @@ table.items input,table.items select{padding:5px 4px;font-size:12px}
       <div><label>% presentismo</label><input id="slPctPres" type="number" min="0" step="any" value="8.33"></div>
     </div>
     <div data-mod="men">
-      <div class="row"><div><label>Otro concepto remunerativo</label><input id="slOtroRN" placeholder="Ej: Comisiones"></div><div><label>Importe ($)</label><input id="slOtroRV" type="number" min="0" step="any" value="0"></div></div>
-      <div class="row"><div><label>Concepto no remunerativo</label><input id="slNoRN" placeholder="Ej: Suma no remunerativa"></div><div><label>Importe ($)</label><input id="slNoRV" type="number" min="0" step="any" value="0"></div></div>
+      <div class="row"><div><label>Otro concepto remunerativo</label><input id="slOtroRN" placeholder="Ej: Comisiones"></div><div><label>Importe ($)</label><input id="slOtroRV" type="text" inputmode="decimal" data-m="1" autocomplete="off" value="0"></div></div>
+      <div class="row"><div><label>Concepto no remunerativo</label><input id="slNoRN" placeholder="Ej: Suma no remunerativa"></div><div><label>Importe ($)</label><input id="slNoRV" type="text" inputmode="decimal" data-m="1" autocomplete="off" value="0"></div></div>
     </div>
     <div class="row" data-mod="sac">
-      <div><label>Mejor remuneración mensual del semestre ($)</label><input id="slMejor" type="number" min="0" step="any" value="500000"></div>
+      <div><label>Mejor remuneración mensual del semestre ($)</label><input id="slMejor" type="text" inputmode="decimal" data-m="1" autocomplete="off" value="500000"></div>
       <div><label>Semestre</label><select id="slSem"><option>1° semestre</option><option>2° semestre</option></select></div>
     </div>
     <div class="row" data-mod="sac"><div><label>Meses trabajados en el semestre (1 a 6)</label><input id="slMeses" type="number" min="1" max="6" step="1" value="6"></div><div></div></div>
@@ -756,8 +776,8 @@ table.items input,table.items select{padding:5px 4px;font-size:12px}
       <label class="chk"><input type="checkbox" id="slSind"> Sindicato</label>
       <div><label>% sindicato</label><input id="slPctSind" type="number" min="0" step="any" value="2"></div>
     </div>
-    <div class="row"><div><label>Adelanto de sueldo ($)</label><input id="slAdel" type="number" min="0" step="any" value="0"></div>
-    <div><label>Otro descuento ($)</label><input id="slOtroD" type="number" min="0" step="any" value="0"></div></div>
+    <div class="row"><div><label>Adelanto de sueldo ($)</label><input id="slAdel" type="text" inputmode="decimal" data-m="1" autocomplete="off" value="0"></div>
+    <div><label>Otro descuento ($)</label><input id="slOtroD" type="text" inputmode="decimal" data-m="1" autocomplete="off" value="0"></div></div>
     <div class="row"><div><label>Nombre del otro descuento</label><input id="slOtroDN" placeholder="Ej: Cuota solidaria"></div><div></div></div>
   </div>
 
@@ -765,7 +785,7 @@ table.items input,table.items select{padding:5px 4px;font-size:12px}
     <h2>Modo de uso</h2>
     <select id="slModo"><option value="calc">Calculadora: los resultados salen solos</option><option value="prac">Práctica: calculo yo y después comparo</option></select>
     <div id="slPrac" hidden>
-      <label>Mi cálculo del sueldo neto ($)</label><input id="slTu" type="number" step="any">
+      <label>Mi cálculo del sueldo neto ($)</label><input id="slTu" type="text" inputmode="decimal" data-m="1" autocomplete="off">
       <div class="actions" style="margin-top:8px"><button class="btn" id="slCmp">Comparar</button><button class="btn" id="slRev">Mostrar / ocultar resultado</button></div>
     </div>
     <div class="steps" id="slSteps"></div>
@@ -828,18 +848,31 @@ table.items input,table.items select{padding:5px 4px;font-size:12px}
  <div class="ay-top"><h2>Ayuda</h2><button class="ay-x" id="ayX" aria-label="Cerrar">✕</button></div>
  <p class="ay-sub">Al escribirme contame solo tu nombre de pila. No hace falta ningún otro dato.</p>
  <details class="ay-d"><summary>Cómo se usa</summary>
-  <ol class="ay-ol"><li>Elegí el documento en la botonera de arriba (Factura, Recibo, Pagaré, Libro diario...).</li><li>Completá los datos y mirá cómo queda el documento.</li><li>Tocá <b>Descargar PDF</b> o <b>Imprimir</b>.</li><li>Todo es de práctica: no tiene validez fiscal ni legal.</li></ol></details>
+  <ol class="ay-ol"><li>Elegí el documento en la botonera de arriba.</li><li>Escribí tu nombre en <b>Estudiante</b> y completá los datos.</li><li>Mirá cómo queda y tocá <b>Descargar PDF</b> o <b>Imprimir</b>.</li><li>Todo es de práctica: no tiene validez fiscal ni legal.</li></ol></details>
+ <details class="ay-d"><summary>Recomendaciones de uso</summary>
+  <ul class="ay-ol"><li>Trabajá siempre en la misma computadora y en el mismo navegador.</li><li>Tu trabajo se guarda solo en ese navegador. Si se corta la sesión o se actualiza la página, al volver podés continuar.</li><li>Usá una sola ventana a la vez.</li><li>No uses la ventana de incógnito: ahí no se guarda nada.</li><li>Descargá el PDF cada día: la herramienta no guarda archivos de actividades anteriores, se trabaja y se descarga lo del día.</li><li>Al terminar, tocá <b>Guardar</b>: ahí podés descargar tu trabajo o borrarlo.</li></ul></details>
  <details class="ay-d"><summary>Soy docente</summary><div class="ay-ls"><a class="ay-l" href="mailto:profelopez99@gmail.com?subject=Docente%3A%20material%20de%20apoyo&body=Hola%2C%20soy%20%5Bescrib%C3%AD%20tu%20nombre%20de%20pila%5D.%20%0A%0A">Material de apoyo</a><a class="ay-l" href="mailto:profelopez99@gmail.com?subject=Docente%3A%20sugerencias&body=Hola%2C%20soy%20%5Bescrib%C3%AD%20tu%20nombre%20de%20pila%5D.%20%0A%0A">Sugerencias</a></div></details>
  <details class="ay-d"><summary>Soy estudiante</summary><div class="ay-ls"><a class="ay-l" href="mailto:profelopez99@gmail.com?subject=Estudiante%3A%20actividades%20y%20herramientas&body=Hola%2C%20soy%20%5Bescrib%C3%AD%20tu%20nombre%20de%20pila%5D.%20%0A%0A">Actividades y herramientas</a><a class="ay-l" href="mailto:profelopez99@gmail.com?subject=Estudiante%3A%20clases%20particulares&body=Hola%2C%20soy%20%5Bescrib%C3%AD%20tu%20nombre%20de%20pila%5D.%20%0A%0A">Clases particulares</a><a class="ay-l" href="mailto:profelopez99@gmail.com?subject=Estudiante%3A%20sugerencias&body=Hola%2C%20soy%20%5Bescrib%C3%AD%20tu%20nombre%20de%20pila%5D.%20%0A%0A">Sugerencias</a></div></details>
  <p class="ay-mail">Si no se abre tu correo, escribime a <b>profelopez99@gmail.com</b> <button class="ay-cp" id="ayCp">Copiar</button></p>
 </div></div>
+<div id="rc" class="ay-ov" hidden><div class="ay-box" role="dialog" aria-label="Trabajo guardado">
+ <h2 style="margin:0 0 6px;font-size:20px">Encontramos tu trabajo guardado</h2>
+ <p class="ay-sub" id="rcT">¿Querés continuar donde lo dejaste?</p>
+ <div class="md-row"><button class="md-btn p" id="rcOk">Continuar</button><button class="md-btn" id="rcNo">Empezar de nuevo</button></div>
+</div></div>
+<div id="fin" class="ay-ov" hidden><div class="ay-box" role="dialog" aria-label="Guardar">
+ <div class="ay-top"><h2>¿Qué querés hacer?</h2><button class="ay-x" id="finX" aria-label="Cerrar">✕</button></div>
+ <div id="finA"><p class="fin-ok">✓ Tu trabajo está guardado en este navegador.</p><div class="md-row" style="margin-top:12px"><button class="md-btn p" id="finD">Descargar PDF</button><button class="md-btn d" id="finB1">Borrar todo</button></div></div>
+ <div id="finC" hidden><p class="ay-sub" style="margin-top:12px">Se borra todo lo que hiciste en este navegador. ¿Seguro?</p><div class="md-row"><button class="md-btn d" id="finSi">Sí, borrar todo</button><button class="md-btn" id="finNo">No</button></div></div>
+</div></div>
+<div id="cf" hidden><span>Hay otra ventana abierta con trabajo guardado. Para no mezclar, usá una sola ventana a la vez.</span><button class="md-btn" id="cfUse">Usar esta ventana</button><button class="md-btn p" id="cfLoad">Cargar el trabajo guardado</button></div>
 <button id="cBtn" class="c-fab" aria-label="Calculadora">🧮 <span>Calculadora</span></button>
 <div id="cPan" class="c-pan" hidden><div class="c-top"><b>Calculadora</b><button id="cX" class="c-x" aria-label="Cerrar">✕</button></div>
  <div class="c-screen"><div id="cExp" class="c-exp">&nbsp;</div><div id="cDis" class="c-dis">0</div></div><div class="c-keys" id="cKeys"></div></div>
 
 <script>
 const $=id=>document.getElementById(id);
-const V=id=>$(id).value;
+const V=id=>{const e=$(id);return e.dataset.m?mn(e.value):e.value};
 const fmt=n=>(+n||0).toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2});
 const pad=(n,l)=>String(Math.max(0,Math.floor(+n||0))).padStart(l,'0');
 const fdate=v=>{if(!v)return '';const [y,m,d]=v.split('-');return `${d}/${m}/${y}`};
@@ -1040,6 +1073,7 @@ function compute(D){
 function footer(pg){
   pg.text('DOCUMENTO CON FINES DIDÁCTICOS - SIN VALIDEZ FISCAL NI LEGAL',105,289,{size:9.5,b:1,a:'c',c:'#b42318'});
   const au=V('autor');if(au)pg.text(au,105,294,{size:7,a:'c',c:'#666'});
+  const al=V('alu').trim();if(al)pg.text('Estudiante: '+al,196,294,{size:7,a:'r',c:'#444'});
 }
 function sigImg(pg,slot,cx,ly,h){const s=sigs[slot];if(s){const w=h*2.5;pg.img(s.data,cx-w/2,ly-h-0.5,w,h)}}
 
@@ -1442,7 +1476,7 @@ function renderItems(){
   items[doc].forEach((it,i)=>{
     h+=`<tr><td><input data-i="${i}" data-k="d" value="${esc(it.d)}"></td>
     <td><input data-i="${i}" data-k="q" type="number" min="0" step="any" value="${it.q}"></td>
-    <td><input data-i="${i}" data-k="p" type="number" min="0" step="any" value="${it.p}"></td>
+    <td><input data-i="${i}" data-k="p" type="text" inputmode="decimal" data-m="1" autocomplete="off" value="${mf(it.p)}"></td>
     <td><input data-i="${i}" data-k="b" type="number" min="0" max="100" step="any" value="${it.b}"></td>
     ${showIva?`<td><select data-i="${i}" data-k="iva">${RATES.map(r=>`<option value="${r}" ${+it.iva===r?'selected':''}>${rateTxt(r)}</option>`).join('')}</select></td>`:''}
     <td><button class="x" data-del="${i}" title="Quitar">×</button></td></tr>`;
@@ -1503,7 +1537,7 @@ document.querySelectorAll('input,select').forEach(el=>{
   const f=()=>{if(el.id==='nro')counters[doc]=+V('nro')||1;if(PERSIST.includes(el.id)||el.id==='nro')saveLocal();if(['slIng','slPer'].includes(el.id))autoSalary();if(el.id==='slModo'||el.id==='slMod')revealPrac=false;schedule()};
   el.addEventListener('input',f);el.addEventListener('change',f);
 });
-$('itemsT').addEventListener('input',e=>{const t=e.target,i=t.dataset.i,k=t.dataset.k;if(i==null)return;items[doc][i][k]=t.value;schedule()});
+$('itemsT').addEventListener('input',e=>{const t=e.target,i=t.dataset.i,k=t.dataset.k;if(i==null)return;items[doc][i][k]=(k==='p'?mn(t.value):t.value);schedule()});
 $('itemsT').addEventListener('click',e=>{const i=e.target.dataset.del;if(i==null)return;items[doc].splice(+i,1);if(!items[doc].length)items[doc].push({d:'',q:1,p:0,b:0,iva:21});renderItems();schedule()});
 $('add').onclick=()=>{items[doc].push({d:'',q:1,p:0,b:0,iva:21});renderItems();schedule()};
 $('remT').addEventListener('input',e=>{const t=e.target,i=t.dataset.i,k=t.dataset.k;if(i==null)return;remItems[i][k]=t.value;schedule()});
@@ -1544,7 +1578,7 @@ $('reset').onclick=()=>{
   ['rNom','rDoc','rDom'].forEach(k=>$(k).value='');
   if(items[doc])items[doc]=[{d:'',q:1,p:0,b:0,iva:21}];
   if(doc==='remito')remItems=[{q:1,d:''}];
-  if(doc==='recibo'){$('rcConc').value='';$('rcImp').value=0;$('rcDet').value=''}
+  if(doc==='recibo'){$('rcConc').value='';$('rcImp').value='0';$('rcDet').value=''}
   sigs.A=sigs.B=null;['A','B'].forEach(s=>{const c=$('pad'+s);c.getContext('2d').clearRect(0,0,c.width,c.height)});
   say('');renderItems();renderRem();renderSheet();
 };
@@ -1563,7 +1597,7 @@ function lbNum(v){v=String(v||'').trim();if(!v)return 0;let t=v;
   const x=parseFloat(t);return isNaN(x)?0:x}
 function lbMsg(t,k){const m=$('lbMsg');m.textContent=t||'';m.className=k||''}
 function lbRow(){const tr=document.createElement('tr');
-  tr.innerHTML='<td><input class="cu" placeholder="Cuenta"></td><td class="n"><input class="de" inputmode="decimal" placeholder="0,00"></td><td class="n"><input class="ha" inputmode="decimal" placeholder="0,00"></td><td class="q"><button class="lb-q" title="Quitar línea" aria-label="Quitar línea">×</button></td>';
+  tr.innerHTML='<td><input class="cu" placeholder="Cuenta"></td><td class="n"><input class="de" inputmode="decimal" data-m="1" autocomplete="off" placeholder="0,00"></td><td class="n"><input class="ha" inputmode="decimal" data-m="1" autocomplete="off" placeholder="0,00"></td><td class="q"><button class="lb-q" title="Quitar línea" aria-label="Quitar línea">×</button></td>';
   return tr}
 function lbCalc(box){let d=0,h=0;
   box.querySelectorAll('tbody tr').forEach(r=>{d+=lbNum(r.querySelector('.de').value);h+=lbNum(r.querySelector('.ha').value)});
@@ -1706,7 +1740,89 @@ const CAFECITO_URL='https://mpago.li/33zhjd9';
     const v=p.querySelector('.vent');v.innerHTML='<div class="gr">¡Gracias por tu aporte!</div>';
     setTimeout(()=>{p.hidden=true},3500)})})();
 
+/* ================= IMPORTES CON PUNTO DE MILES ================= */
+function mn(v){v=String(v==null?'':v).trim();if(!v)return '';return v.replace(/\./g,'').replace(',','.')}
+function mf(v){v=String(v==null?'':v);if(v==='')return '';let [i,d]=v.split('.');i=i.replace(/\B(?=(\d{3})+(?!\d))/g,'.');return i+(d!==undefined&&d!==''?','+d:'')}
+document.querySelectorAll('[data-m]').forEach(e=>{const v=e.value;if(v===''||/[,]/.test(v))return;const n=parseFloat(v);if(isNaN(n))return;e.value=mf(String(n).indexOf('.')>=0?n.toFixed(2):String(n))});
+document.addEventListener('input',e=>{const el=e.target;if(!(el&&el.dataset&&el.dataset.m))return;
+  const raw=el.value,pos=el.selectionStart==null?raw.length:el.selectionStart;
+  const before=raw.slice(0,pos).replace(/[^0-9,]/g,'').length;
+  let t=raw.replace(/[^0-9,]/g,'');const ci=t.indexOf(',');
+  if(ci>=0)t=t.slice(0,ci+1)+t.slice(ci+1).replace(/,/g,'').slice(0,4);
+  let i=ci>=0?t.slice(0,ci):t,d=ci>=0?t.slice(ci+1):'';
+  i=i.replace(/^0+(?=\d)/,'').replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+  const out=i+(ci>=0?','+d:'');
+  if(out!==raw){el.value=out;let n=0,p=0;while(p<out.length&&n<before){if(/[0-9,]/.test(out[p]))n++;p++}try{el.setSelectionRange(p,p)}catch(x){}}
+},true);
+document.addEventListener('keydown',e=>{const el=e.target;
+  if(el&&el.dataset&&el.dataset.m&&e.key==='.'&&!e.ctrlKey&&!e.metaKey&&!e.altKey){e.preventDefault();el.setRangeText(',',el.selectionStart,el.selectionEnd,'end');el.dispatchEvent(new Event('input',{bubbles:true}))}},true);
+document.addEventListener('paste',e=>{const el=e.target;if(!(el&&el.dataset&&el.dataset.m))return;
+  const tx=((e.clipboardData||window.clipboardData).getData('text')||'').trim();e.preventDefault();
+  let t=tx.replace(/[^\d.,]/g,''),v;
+  if(t.indexOf(',')>=0)v=t.replace(/\./g,'');else if(/^\d{1,3}(\.\d{3})+$/.test(t))v=t.replace(/\./g,'');else v=t.replace('.',',');
+  el.setRangeText(v.replace(/[^\d,]/g,''),el.selectionStart,el.selectionEnd,'end');el.dispatchEvent(new Event('input',{bubbles:true}))},true);
+
 setDoc('factura');
+
+/* ================= AUTOGUARDADO + TERMINÉ ================= */
+const WK='docs-escolares-trabajo-v1';
+let dirty=false,paused=false,clearing=false,tmr=0,baseT=null;
+function readWK(){try{return JSON.parse(localStorage.getItem(WK)||'null')}catch(e){return null}}
+function capState(){
+  const f={};document.querySelectorAll('input[id],select[id],textarea[id]').forEach(el=>{
+    if(el.type==='file'||el.closest('#libro')||el.closest('#cPan')||el.closest('#ayuda'))return;
+    f[el.id]=(el.type==='checkbox'||el.type==='radio')?el.checked:el.value});
+  sigBy[doc]={A:sigs.A,B:sigs.B};
+  const as=[...document.querySelectorAll('#lbAs .as')].map(b=>({fe:b.querySelector('.fe').value,gl:b.querySelector('.gl').value,rows:[...b.querySelectorAll('tbody tr')].map(r=>[r.querySelector('.cu').value,r.querySelector('.de').value,r.querySelector('.ha').value])}));
+  return {f,letters:{...letters},items,rem:remItems,counters,sigBy,doc,tab:$('libro').hidden?doc:'libro',lb:{emp:$('lbEmp').value,fol:$('lbFol').value,as}}}
+function saveWork(){if(paused||clearing)return;
+  const cur=readWK();if(cur&&cur.t!==baseT){paused=true;$('cf').hidden=false;return}
+  try{const st=capState();st.t=Date.now();localStorage.setItem(WK,JSON.stringify(st));baseT=st.t}catch(e){}}
+function queueSave(){if(!dirty||paused||clearing)return;clearTimeout(tmr);tmr=setTimeout(saveWork,500)}
+function markDirty(){dirty=true;queueSave()}
+const notWork=t=>t&&t.closest&&(t.closest('#cPan')||t.closest('#ayuda')||t.closest('#rc')||t.closest('#fin')||t.closest('#cf'));
+document.addEventListener('input',e=>{if(!notWork(e.target))markDirty()},true);
+document.addEventListener('change',e=>{if(!notWork(e.target))markDirty()},true);
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('button');if(!b||notWork(b))return;
+  if(b.closest('#tabs')){queueSave();return}
+  if(b.closest('main')||b.closest('#libro'))markDirty()},true);
+document.addEventListener('pointerup',e=>{const id=e.target&&e.target.id;if(id==='padA'||id==='padB')markDirty()},true);
+function applyState(st){
+  const setF=()=>{for(const id in st.f){const el=$(id);if(!el)continue;if(el.type==='checkbox')el.checked=!!st.f[id];else el.value=st.f[id]}};
+  setF();['aMot','slAnios','slDiasVac'].forEach(id=>{if(st.f&&id in st.f&&$(id))$(id).dataset.touched=1});
+  if(st.letters)Object.assign(letters,st.letters);
+  if(st.items)Object.keys(st.items).forEach(k=>{items[k]=st.items[k]});
+  if(st.rem&&st.rem.length)remItems=st.rem;
+  if(st.counters)counters={...counters,...st.counters};
+  Object.assign(sigBy,st.sigBy||{});
+  const c0=sigBy[doc]||{};sigs.A=c0.A||null;sigs.B=c0.B||null;
+  const d=st.doc&&DOCS[st.doc]?st.doc:'factura';
+  setDoc(d);setF();
+  const lb=st.lb;
+  if(lb){$('lbEmp').value=lb.emp||'';$('lbFol').value=lb.fol||'1';$('lbAs').innerHTML='';
+    (lb.as||[]).forEach(a=>{const b=lbAsiento();b.querySelector('.fe').value=a.fe||'';b.querySelector('.gl').value=a.gl||'';
+      const tb=b.querySelector('tbody');while(tb.children.length<a.rows.length)tb.appendChild(lbRow());
+      [...tb.children].forEach((r,i)=>{const v=a.rows[i]||['','',''];r.querySelector('.cu').value=v[0];r.querySelector('.de').value=v[1];r.querySelector('.ha').value=v[2]});lbCalc(b)});
+    if(!$('lbAs').children.length)lbAsiento();lbRenum()}
+  renderItems();renderRem();loadPads();
+  if(st.tab==='libro')setDoc('libro');
+  schedule()}
+function clearAll(){clearing=true;paused=true;try{localStorage.removeItem(WK);localStorage.removeItem('docs-escolares-v2')}catch(e){}location.reload()}
+(function(){const st=readWK();baseT=st?st.t:null;
+  if(st){$('rc').hidden=false;
+    try{$('rcT').textContent='¿Querés continuar donde lo dejaste? (guardado el '+new Date(st.t).toLocaleString('es-AR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})+')'}catch(e){}
+    $('rcOk').onclick=()=>{$('rc').hidden=true;try{applyState(st)}catch(e){console.error(e)};baseT=st.t};
+    $('rcNo').onclick=clearAll}
+  $('cfUse').onclick=()=>{const cur=readWK();baseT=cur?cur.t:null;paused=false;$('cf').hidden=true;dirty=true;saveWork()};
+  $('cfLoad').onclick=()=>{paused=true;location.reload()};
+  const fin=$('fin');
+  $('finB').onclick=()=>{try{dirty=true;saveWork()}catch(e){console.error(e)}$('finA').hidden=false;$('finC').hidden=true;fin.hidden=false};
+  $('finX').onclick=()=>{fin.hidden=true};fin.addEventListener('click',e=>{if(e.target===fin)fin.hidden=true});
+  $('finD').onclick=()=>{fin.hidden=true;($('libro').hidden?$('pdf'):$('lbPdf')).click()};
+  $('finB1').onclick=()=>{$('finA').hidden=true;$('finC').hidden=false};
+  $('finNo').onclick=()=>{$('finA').hidden=false;$('finC').hidden=true};
+  $('finSi').onclick=clearAll;
+})();
 </script>
 </body>
 </html>

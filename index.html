@@ -1034,6 +1034,9 @@ const WHO={
 WHO.nc=WHO.nd=WHO.factura;
 
 let doc='factura',view='orig';
+/* métrica anónima: solo cuenta que se usó una función, nunca datos ni nombres */
+function gcEvent(n){try{const g=window.goatcounter;if(g&&g.count)g.count({path:'uso-'+n,title:n,event:true})}catch(e){}}
+function gcDoc(){try{return DOCS[doc].name.toLowerCase().replace(/ /g,'-')}catch(e){return doc}}
 const letters={factura:'A',nc:'A',nd:'A',recibo:'A'};
 const items={
  factura:[{d:'Cuaderno rayado 48 hojas',q:10,p:1200,b:0,iva:21},{d:'Lapicera azul',q:20,p:350,b:5,iva:21}],
@@ -1567,13 +1570,13 @@ $('slCmp').onclick=()=>{const S=salary(),t=+V('slTu');if(!t&&t!==0){say('Escrib�
 $('slRev').onclick=()=>{revealPrac=!revealPrac;renderSheet()};
 
 /* descargar / imprimir / talonario */
-$('pdf').onclick=()=>{try{const D=gather(false),pd=toPdf(docPages(D,'both')),f=buildFile(D);pd.save(f);say('PDF descargado: '+f,'ok');bump()}catch(e){say('No se pudo generar el PDF: '+(e&&e.message||e),'err')}};
+$('pdf').onclick=()=>{try{const D=gather(false),pd=toPdf(docPages(D,'both')),f=buildFile(D);pd.save(f);gcEvent('pdf-'+gcDoc());say('PDF descargado: '+f,'ok');bump()}catch(e){say('No se pudo generar el PDF: '+(e&&e.message||e),'err')}};
 $('print').onclick=()=>{
   const D=gather(false),pgs=docPages(D,'both'),pa=$('printArea');pa.innerHTML='';
   pgs.forEach(pg=>{const cv=document.createElement('canvas');paint(pg,cv,7);pa.appendChild(cv)});
-  setTimeout(()=>{window.print();say('Documento enviado a imprimir.','ok');setTimeout(()=>{bump();pa.innerHTML=''},600)},80)};
+  setTimeout(()=>{window.print();gcEvent('imprimir-'+gcDoc());say('Documento enviado a imprimir.','ok');setTimeout(()=>{bump();pa.innerHTML=''},600)},80)};
 $('talBtn').onclick=()=>{try{const n=Math.min(30,Math.max(1,+V('tN')||1)),pgs=[];for(let i=0;i<n;i++)pgs.push(...docPages(gather(true,i),'both'));
-  const D=gather(true,0);toPdf(pgs).save('Talonario_'+DOCS[doc].name.replace(/ /g,'_')+(D.L&&doc!=='remito'?'_'+D.L:'')+'_'+n+'_hojas.pdf');say('Talonario descargado: '+n+' juego(s) numerados desde el '+D.nro+'.','ok')}catch(e){say('No se pudo generar el talonario: '+(e&&e.message||e),'err')}};
+  const D=gather(true,0);gcEvent('talonario-'+gcDoc());toPdf(pgs).save('Talonario_'+DOCS[doc].name.replace(/ /g,'_')+(D.L&&doc!=='remito'?'_'+D.L:'')+'_'+n+'_hojas.pdf');say('Talonario descargado: '+n+' juego(s) numerados desde el '+D.nro+'.','ok')}catch(e){say('No se pudo generar el talonario: '+(e&&e.message||e),'err')}};
 $('reset').onclick=()=>{
   ['rNom','rDoc','rDom'].forEach(k=>$(k).value='');
   if(items[doc])items[doc]=[{d:'',q:1,p:0,b:0,iva:21}];
@@ -1666,7 +1669,7 @@ function libroPages(D){
   pgs.forEach(footer);return pgs}
 $('lbPdf').onclick=()=>{const D=lbData();
   if(!D.as.length){lbMsg('Completá al menos un asiento para descargar el PDF.','err');return}
-  try{toPdf(libroPages(D)).save('Libro_diario.pdf');
+  try{toPdf(libroPages(D)).save('Libro_diario.pdf');gcEvent('pdf-libro-diario');
     const bad=D.as.filter(a=>!a.ok).map(a=>a.n);
     lbMsg('PDF descargado: Libro_diario.pdf'+(bad.length?'. Ojo: no balancea el asiento N° '+bad.join(', ')+'.':''),bad.length?'err':'ok')}
   catch(e){lbMsg('No se pudo generar el PDF: '+(e&&e.message||e),'err')}};
@@ -1737,6 +1740,7 @@ const CAFECITO_URL='https://mpago.li/33zhjd9';
   const a=$('promoA');a.href=CAFECITO_URL;p.hidden=false;
   a.addEventListener('click',()=>{
     try{localStorage.setItem(K,HOY)}catch(e){}
+    gcEvent('clic-aporte');
     const v=p.querySelector('.vent');v.innerHTML='<div class="gr">¡Gracias por tu aporte!</div>';
     setTimeout(()=>{p.hidden=true},3500)})})();
 
@@ -1824,5 +1828,6 @@ function clearAll(){clearing=true;paused=true;try{localStorage.removeItem(WK);lo
   $('finSi').onclick=clearAll;
 })();
 </script>
+<script data-goatcounter="https://profelopez.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </body>
 </html>
